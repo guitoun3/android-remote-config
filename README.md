@@ -32,6 +32,8 @@ You have to put all default values you want to persist in SharedPreferences.
 
 default_config.json must be placed under your assets folder.
 
+## Example
+
 Example of local default_config.json
 
 ```json
