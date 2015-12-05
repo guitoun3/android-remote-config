@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
         new RemoteConfig(this)
                 .setBaseUrl("http://meilleurescitations.apprize.fr/v2/")
-                .setConfigFile("config.json")
+                .setConfigFile("config_test.json")
                 .setLocalDefaultConfigFile("default_config.json")
                 .setDebug(true)
                 .getConfig();

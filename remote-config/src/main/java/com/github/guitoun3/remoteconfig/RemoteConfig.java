@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import retrofit.Call;
@@ -19,7 +20,7 @@ import retrofit.http.Url;
 public class RemoteConfig implements Callback<Map<String, Object>> {
 
     private static final String TAG = "RemoteConfig";
-    public static final String DEFAULT_PREFIX = "remote_config_";
+    public static final String PREFIX = "remote_config_";
 
     public interface Config {
         @GET
@@ -31,7 +32,7 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
     private String mBaseUrl;
     private String mConfigFile;
     private String mLocalDefaultConfigFile;
-    private String mPreferencePrefix = DEFAULT_PREFIX;
+    private String mPreferencePrefix = PREFIX;
     private SharedPreferences mSharedPrefs;
 
     private Map<String, Object> mDefaultConfig;
@@ -90,10 +91,10 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
         if (response.isSuccess()) {
             Map<String, Object> entries = response.body();
             if (mDebug) {
-                Log.d(TAG, entries.toString());
+                Log.d(TAG, "Remote config: \n\t" + entries.toString());
             }
 
-            storeConfig(entries);
+            storeConfig(entries, false);
         }
 
         loadDefaultConfig();
@@ -111,26 +112,33 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
         if (data != null) {
             mDefaultConfig.putAll(data);
             if (mDebug) {
-                Log.d(TAG, "Init default config file: \n" + data.toString());
+                Log.d(TAG, "Init default config file: \n\t" + data.toString());
             }
         }
     }
 
     private void loadDefaultConfig() {
-        if (mDebug) {
-            Log.d(TAG, "Loading default config...\n" + mDefaultConfig.toString());
-        }
-        storeConfig(mDefaultConfig);
+        storeConfig(mDefaultConfig, true);
     }
 
-    private void storeConfig(Map<String, Object> entries) {
+    private void storeConfig(Map<String, Object> entries, boolean defaultConfig) {
         SharedPreferences.Editor editor = mSharedPrefs.edit();
 
-        for (Map.Entry<String, Object> entry : entries.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
+        Iterator<Map.Entry<String, Object>> it = entries.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, Object> item = it.next();
+            String key = item.getKey();
+            Object value = item.getValue();
 
-            mDefaultConfig.remove(key);
+            if (entries.equals(mDefaultConfig)) {
+                it.remove();
+            } else {
+                mDefaultConfig.remove(key);
+            }
+
+            if (defaultConfig && mSharedPrefs.contains(mPreferencePrefix + key)) {
+                continue;
+            }
 
             if (value instanceof String) {
                 editor.putString(mPreferencePrefix + key, (String) value);
@@ -148,6 +156,9 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
                 Log.d(TAG, "Invalid type: " + key + " -> " + value.getClass().getName());
             }
 
+            if (mDebug) {
+                Log.d(TAG, "Store " + key + " -> " + value);
+            }
         }
 
         editor.apply();
