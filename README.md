@@ -27,12 +27,25 @@ new RemoteConfig(this)
 ```
 
 Your configuration file (config.json) must be placed on http://yourdomain.com/ and must contains key/value entries.
-If when user launch your app and Internet isn't available you may want to load default configuration anyway. This is the purpose of the default_config.json file.
+If when user launch your app Internet isn't available you may want to load default configuration anyway. This is the purpose of the default_config.json file.
 You have to put all default values you want to persist in SharedPreferences.
 
 default_config.json must be placed under your assets folder.
 
+Example of local default_config.json
 
 ```json
-{"version":"0.9.2","ads_enabled":true,"auto_update_enable":false}
+{"version":"0.9.0","ads_enabled":true,"auto_update_enable":true, "extra_key": "test"}
 ```
+
+Example of remote config.json
+```json
+{"version":"0.9.2","ads_enabled":false,"auto_update_enable":false, "remote_extra_key": "hi!"}
+```
+
+If Internet connection is available then here is the results persisted in SharedPrefences:
+* version -> "0.9.2"
+* ads_enabled -> false
+* auto_update_enable -> false
+* extra_key -> "test"
+* remote_extra_key -> "hi!"
