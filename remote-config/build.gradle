@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/guitoun3/android-remote-config'
     gitUrl = 'https://github.com/guitoun3/android-remote-config.git'
 
-    libraryVersion = '1.1.0'
+    libraryVersion = '1.1.1'
 
     developerId = 'guitoun3'
     developerName = 'Guillaume Desbieys'
