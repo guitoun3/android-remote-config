@@ -4,7 +4,7 @@ Remote Configuration for Android
 [ ![Download](https://api.bintray.com/packages/guitoun3/maven/android-remote-config/images/download.svg) ](https://bintray.com/guitoun3/maven/android-remote-config/_latestVersion)
 
 
-This library will parse a remote JSON to persist its key/value in SharedPreferences. If there is no Internet connection then local JSON will be used.
+This library will parse a remote JSON to persists its key/value in SharedPreferences. If there is no Internet connection then local JSON will be used.
 
 ## Installation
 
