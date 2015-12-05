@@ -6,7 +6,7 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'android-remote-config'
 
-    publishedGroupId =
+    publishedGroupId = 'com.github.guitoun3'
     libraryName = 'Remote config'
     artifact = 'remote-config'
 
@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/guitoun3/android-remote-config'
     gitUrl = 'https://github.com/guitoun3/android-remote-config.git'
 
-    libraryVersion = '1.1.1'
+    libraryVersion = '1.1.3'
 
     developerId = 'guitoun3'
     developerName = 'Guillaume Desbieys'
