@@ -6,14 +6,14 @@ ext {
 
     publishedGroupId = 'com.github.guitoun3'
     libraryName = 'Remote config'
-    artifact = 'android-remote-config'
+    artifact = 'remote-config'
 
     libraryDescription = 'Get simple config from remote server'
 
     siteUrl = 'https://github.com/guitoun3/android-remote-config'
     gitUrl = 'https://github.com/guitoun3/android-remote-config.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.1'
 
     developerId = 'guitoun3'
     developerName = 'Guillaume Desbieys'
