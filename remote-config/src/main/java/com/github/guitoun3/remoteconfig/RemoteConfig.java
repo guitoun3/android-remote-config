@@ -124,43 +124,45 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
     private void storeConfig(Map<String, Object> entries, boolean defaultConfig) {
         SharedPreferences.Editor editor = mSharedPrefs.edit();
 
-        Iterator<Map.Entry<String, Object>> it = entries.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Object> item = it.next();
-            String key = item.getKey();
-            Object value = item.getValue();
+        if (entries != null) {
+            Iterator<Map.Entry<String, Object>> it = entries.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, Object> item = it.next();
+                String key = item.getKey();
+                Object value = item.getValue();
 
-            if (entries.equals(mDefaultConfig)) {
-                it.remove();
-            } else {
-                mDefaultConfig.remove(key);
+                if (entries.equals(mDefaultConfig)) {
+                    it.remove();
+                } else {
+                    mDefaultConfig.remove(key);
+                }
+
+                if (defaultConfig && mSharedPrefs.contains(mPreferencePrefix + key)) {
+                    continue;
+                }
+
+                if (value instanceof String) {
+                    editor.putString(mPreferencePrefix + key, (String) value);
+                } else if (value instanceof Boolean) {
+                    editor.putBoolean(mPreferencePrefix + key, (Boolean) value);
+                } else if (value instanceof Integer) {
+                    editor.putInt(mPreferencePrefix + key, (Integer) value);
+                } else if (value instanceof Long) {
+                    editor.putLong(mPreferencePrefix + key, (Long) value);
+                } else if (value instanceof Float) {
+                    editor.putFloat(mPreferencePrefix + key, (Float) value);
+                } else if (value instanceof Double) {
+                    editor.putString(mPreferencePrefix + key, String.valueOf(value));
+                } else if (mDebug) {
+                    Log.d(TAG, "Invalid type: " + key + " -> " + value.getClass().getName());
+                }
+
+                if (mDebug) {
+                    Log.d(TAG, "Store " + key + " -> " + value);
+                }
             }
 
-            if (defaultConfig && mSharedPrefs.contains(mPreferencePrefix + key)) {
-                continue;
-            }
-
-            if (value instanceof String) {
-                editor.putString(mPreferencePrefix + key, (String) value);
-            } else if (value instanceof Boolean) {
-                editor.putBoolean(mPreferencePrefix + key, (Boolean) value);
-            } else if (value instanceof Integer) {
-                editor.putInt(mPreferencePrefix + key, (Integer) value);
-            } else if (value instanceof Long) {
-                editor.putLong(mPreferencePrefix + key, (Long) value);
-            } else if (value instanceof Float) {
-                editor.putFloat(mPreferencePrefix + key, (Float) value);
-            } else if (value instanceof Double) {
-                editor.putString(mPreferencePrefix + key, String.valueOf(value));
-            } else if (mDebug) {
-                Log.d(TAG, "Invalid type: " + key + " -> " + value.getClass().getName());
-            }
-
-            if (mDebug) {
-                Log.d(TAG, "Store " + key + " -> " + value);
-            }
+            editor.apply();
         }
-
-        editor.apply();
     }
 }
