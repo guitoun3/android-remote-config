@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/guitoun3/android-remote-config'
     gitUrl = 'https://github.com/guitoun3/android-remote-config.git'
 
-    libraryVersion = '1.1.4'
+    libraryVersion = '1.2.0'
 
     developerId = 'guitoun3'
     developerName = 'Guillaume Desbieys'
@@ -46,8 +46,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
 }
 
 

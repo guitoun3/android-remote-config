@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
-import retrofit.http.GET;
-import retrofit.http.Url;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Url;
+
 
 public class RemoteConfig implements Callback<Map<String, Object>> {
 
@@ -34,6 +35,7 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
     private String mLocalDefaultConfigFile;
     private String mPreferencePrefix = PREFIX;
     private SharedPreferences mSharedPrefs;
+    private RemoteConfigListener mListener;
 
     private Map<String, Object> mDefaultConfig;
 
@@ -66,6 +68,12 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
         return this;
     }
 
+    public RemoteConfig addRemoteListener(RemoteConfigListener listener) {
+        mListener = listener;
+
+        return this;
+    }
+
     public RemoteConfig setPreferencePrefix(String prefix) {
         mPreferencePrefix = prefix;
 
@@ -87,21 +95,21 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
     }
 
     @Override
-    public void onResponse(Response<Map<String, Object>> response, Retrofit retrofit) {
-        if (response.isSuccess()) {
+    public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+        if (response.isSuccessful()) {
             Map<String, Object> entries = response.body();
             if (mDebug) {
                 Log.d(TAG, "Remote config: \n\t" + entries.toString());
             }
 
             storeConfig(entries, false);
+        } else {
+            loadDefaultConfig();
         }
-
-        loadDefaultConfig();
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<Map<String, Object>> call, Throwable t) {
         loadDefaultConfig();
     }
 
@@ -164,5 +172,13 @@ public class RemoteConfig implements Callback<Map<String, Object>> {
 
             editor.apply();
         }
+
+        if (mListener != null) {
+            mListener.onRemoteConfigLoaded();
+        }
+    }
+
+    public interface RemoteConfigListener {
+        void onRemoteConfigLoaded();
     }
 }
